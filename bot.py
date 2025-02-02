@@ -10,8 +10,8 @@ from config.settings import Filters
 class MemeTrackerBot:
     def __init__(self):
         self.dex = DexScanner()
-        self.solscan = SolscanValidator(api_keys.SOLSCAN_API_KEY)
-        self.solscan = SolscanValidator(api_keys.SOLSCAN_API_KEY)
+        self.solscan = SolscanValidator()
+        self.solscan = SolscanValidator()
         self.alerter = AlertEngine()
         self.db_path = "data/processed.db"
         
