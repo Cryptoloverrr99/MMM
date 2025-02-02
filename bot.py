@@ -3,15 +3,14 @@ import aiosqlite
 from decimal import Decimal
 from core.dex_processor import DexScanner
 from core.solscan_audit import SolscanValidator
-from config import api_keys 
 from core.alert_system import AlertEngine
 from config.settings import Filters
+from config import api_keys
 
 class MemeTrackerBot:
     def __init__(self):
         self.dex = DexScanner()
-        self.solscan = SolscanValidator()
-        self.solscan = SolscanValidator()
+        self.solscan = SolscanValidator()  # Sans paramètre
         self.alerter = AlertEngine()
         self.db_path = "data/processed.db"
         
