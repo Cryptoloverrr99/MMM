@@ -11,3 +11,7 @@ class Filters:
     MIN_HOLDERS = 100
     MIN_VOLUME = Decimal('500000')
     MCAP_INCREASE = Decimal('50000')
+    
+    # Solscan
+    MAX_TOP10 = Decimal('0.35')
+    MAX_DEV_HOLDING = Decimal('0.20')
