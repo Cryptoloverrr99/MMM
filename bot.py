@@ -67,5 +67,24 @@ class MemeTrackerBot:
         await db.commit()
 
 if __name__ == "__main__":
+    # Configuration explicite pour le mode API publique
+    from config import api_keys
+    
+    class PublicConfig:
+        SOLSCAN_API_KEY = ''  # Force l'utilisation de l'API publique
+        TELEGRAM_CONFIG = {
+            'token': api_keys.TELEGRAM_BOT_TOKEN,
+            'chat_id': api_keys.TELEGRAM_CHAT_ID
+        }
+
+    # Initialisation avec config personnalisée
     bot = MemeTrackerBot()
-    asyncio.run(bot.run())
+    
+    try:
+        asyncio.run(bot.run())
+    except KeyboardInterrupt:
+        print("\nBot arrêté proprement")
+    finally:
+        # Fermeture explicite des sessions
+        asyncio.run(bot.dex.session.close())
+        asyncio.run(bot.solscan.session.close())
