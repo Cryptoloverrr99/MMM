@@ -1,7 +1,4 @@
 class SolscanValidator:
-    HOLDERS_API = "https://public-api.solscan.io/token/holders"
-    BALANCE_API = "https://public-api.solscan.io/account/tokens"
-
     def __init__(self):
         self.session = aiohttp.ClientSession()
         
