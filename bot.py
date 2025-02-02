@@ -3,6 +3,7 @@ import aiosqlite
 from decimal import Decimal
 from core.dex_processor import DexScanner
 from core.solscan_audit import SolscanValidator
+from config import api_keys 
 from core.alert_system import AlertEngine
 from config.settings import Filters
 
