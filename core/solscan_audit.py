@@ -1,39 +1,30 @@
-import aiohttp
-from decimal import Decimal
-
 class SolscanValidator:
-    HOLDERS_API = "https://pro-api.solscan.io/v2.0/token/holders"
-    BALANCE_API = "https://pro-api.solscan.io/v2.0/account/balance_change"
-    
-    def __init__(self, api_key):
-        self.headers = {'X-API-KEY': api_key}
-        self.session = aiohttp.ClientSession(headers=self.headers)
+    HOLDERS_API = "https://public-api.solscan.io/token/holders"
+    BALANCE_API = "https://public-api.solscan.io/account/tokens"
+
+    def __init__(self):
+        self.session = aiohttp.ClientSession()
         
     async def analyze_token(self, token_address):
         holders = await self._get_holders(token_address)
-        dev_activity = await self._get_dev_activity(token_address)
+        balance = await self._get_balance(token_address)
         
         return {
             'top10': self._calc_top10(holders),
-            'dev_holding': dev_activity['holding'],
-            'dev_sold': dev_activity['sold'],
-            'dev_transfers': dev_activity['transfers']
+            'dev_holding': self._parse_balance(balance),
+            'dev_transfers': 0  # Non disponible sur API publique
         }
-    
+
     async def _get_holders(self, address):
-        async with self.session.get(self.HOLDERS_API, params={'token': address}) as resp:
+        async with self.session.get(
+            self.HOLDERS_API,
+            params={'tokenAddress': address}
+        ) as resp:
             return await resp.json()
-    
-    async def _get_dev_activity(self, address):
-        async with self.session.get(self.BALANCE_API, params={'token': address}) as resp:
-            data = await resp.json()
-            return {
-                'holding': Decimal(data.get('devHolding', 0)),
-                'sold': Decimal(data.get('soldFirst10', 0)),
-                'transfers': data.get('transferCount', 0)
-            }
-    
-    def _calc_top10(self, holders_data):
-        top10 = sum(h['amount'] for h in holders_data['data'][:10])
-        total = holders_data['total']
-        return Decimal(top10) / Decimal(total)
+
+    async def _get_balance(self, address):
+        async with self.session.get(
+            self.BALANCE_API,
+            params={'account': address}
+        ) as resp:
+            return await resp.json()
